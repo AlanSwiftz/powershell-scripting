@@ -1,6 +1,6 @@
 $Targetfolder = "/Users/Tempest/Documents/Projects/Powershell/powershell-scripting"
 $FileName = "t.txt"
-$RunCount = 2
+$RunCount = 1
 $MaxIntervalMins = 10
 $GitRepoPath = "/Users/Tempest/Documents/Projects/Powershell/powershell-scripting"
 $GitCommands = @(
@@ -11,7 +11,8 @@ $GitCommands = @(
     "git push origin main"
 )
 
-# Create target folder if missing
+
+# Ensure target folder exists
 if (-not (Test-Path $Targetfolder)) {
     New-Item -Path $Targetfolder -ItemType Directory -Force | Out-Null
 }
@@ -19,7 +20,6 @@ if (-not (Test-Path $Targetfolder)) {
 $FullPath = Join-Path $Targetfolder $FileName
 $iteration = 0
 
-# Infinite loop (or limited by $RunCount)
 while ($true) {
     if ($RunCount -gt 0 -and $iteration -ge $RunCount) { break }
 
@@ -28,30 +28,21 @@ while ($true) {
     "$timestamp | iteration:$iteration" | Out-File -FilePath $FullPath -Append -Encoding utf8
     Write-Host "[$timestamp] Iteration $iteration started..." -ForegroundColor Cyan
 
-    # ==== Run Git Commands ====
+    # ==== Run Git Commands (no file logging) ====
     if (Test-Path $GitRepoPath) {
         Set-Location $GitRepoPath
         foreach ($cmd in $GitCommands) {
             Write-Host "Running: $cmd" -ForegroundColor Yellow
             try {
-                $output = Invoke-Expression $cmd
-                if ($output) {
-                    $output | Out-File -FilePath $FullPath -Append -Encoding utf8
-                    Write-Host "Success: $cmd" -ForegroundColor Green
-                } else {
-                    Write-Host "No output from $cmd" -ForegroundColor DarkGray
-                }
+                Invoke-Expression $cmd | Out-Null
+                Write-Host "Success: $cmd" -ForegroundColor Green
             }
             catch {
-                $errMsg = "Error running ${cmd}: $($_.Exception.Message)"
-                Write-Host $errMsg -ForegroundColor Red
-                $errMsg | Out-File -FilePath $FullPath -Append -Encoding utf8
+                Write-Host "Error running ${cmd}: $($_.Exception.Message)" -ForegroundColor Red
             }
         }
     } else {
-        $errMsg = "Repo path not found: $GitRepoPath"
-        Write-Host $errMsg -ForegroundColor Red
-        $errMsg | Out-File -FilePath $FullPath -Append -Encoding utf8
+        Write-Host "Repo path not found: $GitRepoPath" -ForegroundColor Red
     }
 
     # ==== Sleep Randomly ====
