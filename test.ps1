@@ -6,10 +6,9 @@ $GitRepoPath = "/Users/Tempest/Documents/Projects/Powershell/powershell-scriptin
 $GitCommands = @(
     "git status",
     "git pull origin main",
-    # Add more commands like:
-     "git add .",
-     "git commit -m 'automated commit from PowerShell'",
-     "git push origin main"
+    "git add .",
+    "git commit -m 'automated commit from PowerShell'",
+    "git push origin main"
 )
 
 # Create target folder if missing
