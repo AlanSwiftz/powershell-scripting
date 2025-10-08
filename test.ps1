@@ -9,7 +9,7 @@ $GitCommands = @(
     "git pull origin test",
     "git add .",
     "git commit -m 'automated commit from PowerShell'",
-    "git push origin main"
+    "git push origin test"
 )
 
 
