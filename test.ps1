@@ -5,7 +5,8 @@ $MaxIntervalMins = 10
 $GitRepoPath = "/Users/Tempest/Documents/Projects/Powershell/powershell-scripting"
 $GitCommands = @(
     "git status",
-    "git pull origin main",
+    "git checkout -b test"
+    "git pull origin test",
     "git add .",
     "git commit -m 'automated commit from PowerShell'",
     "git push origin main"
